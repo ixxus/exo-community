@@ -29,9 +29,9 @@ ENV EXO_GROUP ${EXO_USER}
 # Customise system
 RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh
 
-# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added.
+# The user gets all ssh rights
 RUN useradd --create-home --user-group --shell /bin/bash ${EXO_USER} \
-    # giving all rights to eXo user
     && echo "exo   ALL = NOPASSWD: ALL" > /etc/sudoers.d/exo && chmod 440 /etc/sudoers.d/exo
 
 # Install some useful or needed tools
