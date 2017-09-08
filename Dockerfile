@@ -14,7 +14,8 @@ FROM       exoplatform/base-jdk:jdk8
 MAINTAINER eXo Platform <docker@exoplatform.com>
 
 # Environment variables
-ENV EXO_VERSION 5.0.0-M20
+ARG EXO_VERSION=5.0.0-M20
+ARG EXO_DOWNLOAD_URL=https://downloads.exoplatform.org/public/exo-platform-community-edition-${EXO_VERSION}.zip
 
 ENV EXO_APP_DIR   /opt/exo
 ENV EXO_CONF_DIR  /etc/exo
@@ -48,7 +49,7 @@ RUN mkdir -p ${EXO_DATA_DIR}   && chown ${EXO_USER}:${EXO_GROUP} ${EXO_DATA_DIR}
     && mkdir -p ${EXO_LOG_DIR} && chown ${EXO_USER}:${EXO_GROUP} ${EXO_LOG_DIR}
 
 # Install eXo Platform
-RUN curl -L -o /srv/downloads/eXo-Platform-community-${EXO_VERSION}.zip https://downloads.exoplatform.org/public/exo-platform-community-edition-${EXO_VERSION}.zip \
+RUN curl -L -o /srv/downloads/eXo-Platform-community-${EXO_VERSION}.zip ${EXO_DOWNLOAD_URL} \
     && unzip -q /srv/downloads/eXo-Platform-community-${EXO_VERSION}.zip -d /srv/downloads/ \
     && rm -f /srv/downloads/eXo-Platform-community-${EXO_VERSION}.zip \
     && mv /srv/downloads/platform-community-${EXO_VERSION} ${EXO_APP_DIR} \
