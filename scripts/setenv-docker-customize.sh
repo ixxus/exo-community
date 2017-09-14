@@ -368,7 +368,7 @@ else
     echo "# installing add-ons from EXO_ADDONS_LIST environment variable:"
     echo ${EXO_ADDONS_LIST} | tr ',' '\n' | while read _addon ; do
       # Install addon
-      ${EXO_APP_DIR}/addon install ${_ADDON_MGR_OPTIONS:-} ${_addon} --force --batch-mode
+      ${EXO_APP_DIR}/addon install ${_ADDON_MGR_OPTIONS:-} ${_addon} --no-compat --force --batch-mode
       if [ $? != 0 ]; then
         echo "[ERROR] Problem during add-on [${_addon}] install."
         exit 1
