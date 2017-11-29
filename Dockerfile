@@ -10,11 +10,11 @@
 #           docker run -d --rm -p 8080:8080 -v exo_data:/srv/exo exoplatform/exo-community
 #           docker run -d -p 8080:8080 -v $(pwd)/setenv-customize.sh:/opt/exo/bin/setenv-customize.sh:ro exoplatform/exo-community
 
-FROM       exoplatform/base-jdk:jdk8
-MAINTAINER eXo Platform <docker@exoplatform.com>
+FROM    exoplatform/base-jdk:jdk8
+LABEL   maintainer="eXo Platform <docker@exoplatform.com>"
 
 # Environment variables
-ARG EXO_VERSION=5.0.0-M20
+ENV EXO_VERSION 5.0.0-M33
 ARG EXO_DOWNLOAD_URL=https://downloads.exoplatform.org/public/exo-platform-community-edition-${EXO_VERSION}.zip
 
 ENV EXO_APP_DIR   /opt/exo
@@ -26,11 +26,14 @@ ENV EXO_TMP_DIR   /tmp/exo-tmp
 ENV EXO_USER exo
 ENV EXO_GROUP ${EXO_USER}
 
+# allow to override the list of addons to package by default
+ARG ADDONS="exo-jdbc-driver-mysql:1.1.0"
+
 # Customise system
 RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh
 
-# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added.
-# The user gets all ssh rights
+# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+# giving all rights to eXo user
 RUN useradd --create-home --user-group --shell /bin/bash ${EXO_USER} \
     && echo "exo   ALL = NOPASSWD: ALL" > /etc/sudoers.d/exo && chmod 440 /etc/sudoers.d/exo
 
@@ -82,5 +85,7 @@ USER ${EXO_USER}
 
 WORKDIR "/opt/exo/"
 VOLUME ["/srv/exo"]
+
+RUN for a in ${ADDONS}; do echo "Installing addon $a"; /opt/exo/addon install $a; done
 
 ENTRYPOINT ["/opt/exo/start_eXo.sh", "--data", "/srv/exo"]
