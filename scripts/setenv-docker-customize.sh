@@ -19,6 +19,7 @@ replace_in_file() {
 
 # $1 : the full line content to insert at the end of eXo configuration file
 add_in_exo_configuration() {
+  [ "${EXO_CREATE_EXO_PROPERTIES}" == "false" ] && return 0
   local EXO_CONFIG_FILE="/etc/exo/exo.properties"
   local P1="$1"
   if [ ! -f ${EXO_CONFIG_FILE} ]; then
@@ -51,6 +52,7 @@ add_in_chat_configuration() {
 # Check configuration variables and add default values when needed
 # -----------------------------------------------------------------------------
 set +u		# DEACTIVATE unbound variable check
+[ -z "${EXO_CREATE_EXO_PROPERTIES}" ] && EXO_CREATE_EXO_PROPERTIES="true"
 [ -z "${EXO_PROXY_VHOST}" ] && EXO_PROXY_VHOST="localhost"
 [ -z "${EXO_PROXY_SSL}" ] && EXO_PROXY_SSL="false"
 [ -z "${EXO_PROXY_PORT}" ] && {
